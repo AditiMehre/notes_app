@@ -34,7 +34,7 @@ class Utils {
     int n = notes.length;
     for (int i = 0; i < n - 1; i++) {
       for (int j = 0; j < n-1 ; j++) {
-        String title1 = notes[j].title.toLowerCase(); // Convert titles to lowercase for case-insensitive sorting
+        String title1 = notes[j].title.toLowerCase();
         String title2 = notes[j + 1].title.toLowerCase();
         if(title1.compareTo(title2) > 0){
           // Swap notes[j] and notes[j+1]
@@ -73,6 +73,13 @@ class Utils {
       }
     }
   }
+  void deleteNoteById(int id, Function() setStateCallback) {
+    sampleNotes.removeWhere((note) {
+      return note.id == id;
+    });
+    setStateCallback();
+  }
+
 
 
 }
