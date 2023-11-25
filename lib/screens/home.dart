@@ -7,6 +7,7 @@ import 'package:notes_app/models/note.dart';
 import '../constants/colors.dart';
 import '../models/utils.dart';
 import '../widgets/drawer.dart';
+import 'edit.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -151,6 +152,35 @@ class _HomeState extends State<Home> {
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: ListTile(
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditScreen(
+                                note: filteredNotes[index],
+                              ),
+                            ),
+                          );
+                          if (result != null) {
+                            setState(() {
+                              int originalIndex = sampleNotes.indexOf(filteredNotes[index]);
+                              sampleNotes[originalIndex] = Note(
+                                id: sampleNotes[originalIndex].id,
+                                title: result[0],
+                                content: result[1],
+                                createdAt: DateTime.now(),
+                                dateModified: DateTime.now(),
+                              );
+                             filteredNotes[index] = Note(
+                                id: filteredNotes[index].id,
+                                title: result[0],
+                                content: result[1],
+                                createdAt: DateTime.now(),
+                                dateModified: DateTime.now(),
+                              );
+                            });
+                          }
+                        },
                         title: RichText(
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
@@ -206,7 +236,8 @@ class _HomeState extends State<Home> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        margin: const EdgeInsets.only(left: 15.0),
+                                        margin:
+                                            const EdgeInsets.only(left: 15.0),
                                         child: ElevatedButton(
                                           onPressed: () {
                                             Navigator.pop(context, true);
@@ -265,7 +296,27 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         elevation: 3,
         backgroundColor: Colors.grey.shade800,
-        onPressed: () {},
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    EditScreen()), // Replace EditScreen with your actual screen widget
+          );
+          if (result != null) {
+            setState(() {
+              sampleNotes.add(Note(
+                  id: sampleNotes.length,
+                  title: result[0],
+                  content: result[1],
+                  createdAt: DateTime.now(),
+                  dateModified: DateTime.now()));
+              // Clear the search text and update filteredNotes
+              searchController.clear();
+              filteredNotes = sampleNotes;
+            });
+          }
+        },
         child: const Icon(
           Icons.add,
           size: 38,
