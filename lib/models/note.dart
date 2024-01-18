@@ -9,6 +9,7 @@ class Note {
   Color color;
   DateTime dateModified;
 
+
   Note(
       {required this.id,
       required this.title,
@@ -17,6 +18,27 @@ class Note {
       this.color = Colors.white,
       required this.dateModified}) {
     color = Utils.getRandomColor();
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'content': content,
+      'createdAt': createdAt.toIso8601String(),
+      'color': color.value, // Storing the color as integer
+      'dateModified': dateModified.toIso8601String(),
+    };
+  }
+
+  static Note fromMap(Map<String, dynamic> map) {
+    return Note(
+      id: map['id'],
+      title: map['title'],
+      content: map['content'],
+      createdAt: DateTime.parse(map['createdAt']),
+      color: Color(map['color']),
+      dateModified: DateTime.parse(map['dateModified']),
+    );
   }
 }
 
@@ -117,7 +139,7 @@ List<Note> sampleNotes = [
     id: 14,
     title: 'Learn to Code',
     content: 'Complete the next module in the online coding course.',
-    createdAt: DateTime.now().subtract(Duration(days: 9)),
+    createdAt: DateTime.now().subtract(const Duration(days: 9)),
     dateModified: DateTime.now(),
   ),
   Note(
@@ -128,3 +150,4 @@ List<Note> sampleNotes = [
     dateModified: DateTime.now(),
   ),
 ];
+

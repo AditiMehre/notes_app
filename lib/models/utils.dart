@@ -59,27 +59,12 @@ class Utils {
       }
     }
   }
-  void sortNotesByDateModified(List<Note> notes) {
-    int n = notes.length;
 
-    for (int i = 0; i < n - 1; i++) {
-      for (int j = 0; j < n - i - 1; j++) {
-        if (notes[j].dateModified.isAfter(notes[j + 1].dateModified)) {
-          // Swap notes[j] and notes[j + 1]
-          Note temp = notes[j];
-          notes[j] = notes[j + 1];
-          notes[j + 1] = temp;
-        }
-      }
-    }
-  }
-  void deleteNoteById(int id, Function() setStateCallback) {
-    sampleNotes.removeWhere((note) {
-      return note.id == id;
-    });
-    setStateCallback();
-  }
-
-
+  // void deleteNoteById(int id, Function() setStateCallback) {
+  //   sampleNotes.removeWhere((note) {
+  //     return note.id == id;
+  //   });
+  //   setStateCallback();
+  // }
 
 }

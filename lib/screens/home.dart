@@ -1,10 +1,8 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_app/models/note.dart';
 
-import '../constants/colors.dart';
 import '../models/utils.dart';
 import '../widgets/drawer.dart';
 import 'edit.dart';
@@ -22,6 +20,20 @@ class _HomeState extends State<Home> {
   late TextEditingController searchController;
   Note? deletedNote;
 
+  void deleteNote(int index) {
+    setState(() {
+      Note note = filteredNotes[index];
+
+      // Remove the note from sampleNotes using its ID
+      sampleNotes.removeWhere((n) => n.id == note.id);
+
+      // Remove the note from filteredNotes by index
+      filteredNotes.removeAt(index);
+    });
+  }
+
+
+  @override
   void initState() {
     super.initState();
     setState(() {
@@ -35,6 +47,7 @@ class _HomeState extends State<Home> {
         });
       }
     });
+
   }
 
   @override
@@ -53,7 +66,7 @@ class _HomeState extends State<Home> {
                 Builder(
                   builder: (context) {
                     return IconButton(
-                      icon: Icon(Icons.menu, color: Colors.white),
+                      icon: const Icon(Icons.menu, color: Colors.white),
                       onPressed: () {
                         _scaffoldKey.currentState?.openDrawer();
                       },
@@ -84,8 +97,7 @@ class _HomeState extends State<Home> {
                         Utils().sortNotesAlphabetically(filteredNotes);
                       } else if (value == 'date_created') {
                         Utils().sortNotesByDateCreated(filteredNotes);
-                      } else if (value == 'date_modified') {
-                        Utils().sortNotesByDateModified(filteredNotes);
+
                       }
                     });
                   },
@@ -99,10 +111,7 @@ class _HomeState extends State<Home> {
                       value: 'date_created',
                       child: Text('Sort by Date Created'),
                     ),
-                    const PopupMenuItem<String>(
-                      value: 'date_modified',
-                      child: Text('Sort by Date Modified'),
-                    ),
+
                   ],
                 )
               ],
@@ -119,7 +128,7 @@ class _HomeState extends State<Home> {
               controller: searchController,
               style: const TextStyle(color: Colors.white, fontSize: 16),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 hintText: 'Search notes',
                 hintStyle: const TextStyle(color: Colors.grey),
                 prefixIcon: const Icon(
@@ -130,11 +139,11 @@ class _HomeState extends State<Home> {
                 fillColor: Colors.grey.shade800,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
               ),
             ),
@@ -143,7 +152,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(top: 30),
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: EdgeInsets.only(bottom: 20),
+                    margin: const EdgeInsets.only(bottom: 20),
                     color: filteredNotes[index].color,
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -163,7 +172,8 @@ class _HomeState extends State<Home> {
                           );
                           if (result != null) {
                             setState(() {
-                              int originalIndex = sampleNotes.indexOf(filteredNotes[index]);
+                              int originalIndex =
+                                  sampleNotes.indexOf(filteredNotes[index]);
                               sampleNotes[originalIndex] = Note(
                                 id: sampleNotes[originalIndex].id,
                                 title: result[0],
@@ -171,7 +181,7 @@ class _HomeState extends State<Home> {
                                 createdAt: DateTime.now(),
                                 dateModified: DateTime.now(),
                               );
-                             filteredNotes[index] = Note(
+                              filteredNotes[index] = Note(
                                 id: filteredNotes[index].id,
                                 title: result[0],
                                 content: result[1],
@@ -251,7 +261,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(right: 15),
+                                        margin: const EdgeInsets.only(right: 15),
                                         child: ElevatedButton(
                                           onPressed: () {
                                             Navigator.pop(context, false);
@@ -271,14 +281,7 @@ class _HomeState extends State<Home> {
                             );
 
                             if (result == true) {
-                              Utils().deleteNoteById(filteredNotes[index].id,
-                                  () {
-                                setState(
-                                  () {
-                                    filteredNotes.removeAt(index);
-                                  },
-                                );
-                              });
+                              deleteNote(index);
                             }
                           },
                           icon: const Icon(Icons.delete),
@@ -301,7 +304,7 @@ class _HomeState extends State<Home> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    EditScreen()), // Replace EditScreen with your actual screen widget
+                    const EditScreen()), // Replace EditScreen with your actual screen widget
           );
           if (result != null) {
             setState(() {
